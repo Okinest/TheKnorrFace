@@ -1,4 +1,4 @@
-type ProductCategory = 'men' | 'women' | 'kids' | 'accessories';
+export type ProductCategory = 'men' | 'women' | 'kids' | 'accessories';
 
 export type Product = {
   id: string;
