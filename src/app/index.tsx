@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ProductCard } from "@/components/product-card";
 import { ProductFilters } from "@/components/product-filters";
 import { INITIAL_CART, type CartItem } from "@/data/cart";
+import { useColumns } from "@/hooks/use-columns";
 import { useProductFilters } from "@/hooks/use-product-filters";
 import { useProducts } from "@/hooks/use-products";
 
 export default function Index() {
-  const { width } = useWindowDimensions();
-  const columns = width >= 900 ? 4 : width >= 600 ? 3 : 2;
+  const { columns, isWide } = useColumns();
   const { state, reload } = useProducts();
   const allProducts = state.status === "success" ? state.products : [];
   const { query, setQuery, category, setCategory, products } = useProductFilters(allProducts);
@@ -34,7 +34,7 @@ export default function Index() {
         numColumns={columns}
         keyExtractor={(item) => item.id}
         columnWrapperStyle={columns > 1 ? styles.row : undefined}
-        contentContainerStyle={[styles.content, width >= 900 && styles.wideContent]}
+        contentContainerStyle={[styles.content, isWide && styles.wideContent]}
         ListHeaderComponent={(
           <View>
             <View style={styles.topBar}>
@@ -63,7 +63,7 @@ export default function Index() {
           state.status === "loading" ? (
             <View style={styles.stateBox}><ActivityIndicator color="#292720" /><Text style={styles.stateText}>Chargement du catalogue…</Text></View>
           ) : state.status === "error" ? (
-            <View style={styles.stateBox}><Text style={styles.stateText}>{state.message}</Text><Pressable onPress={() => void reload()} style={styles.retryButton}><Text style={styles.retryText}>Réessayer</Text></Pressable></View>
+            <View style={styles.stateBox}><Text style={styles.stateText}>{state.message}</Text><Pressable onPress={reload} style={styles.retryButton}><Text style={styles.retryText}>Réessayer</Text></Pressable></View>
           ) : <Text style={styles.empty}>Aucun article ne correspond à votre recherche.</Text>
         }
         showsVerticalScrollIndicator={false}

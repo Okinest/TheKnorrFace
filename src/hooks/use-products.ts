@@ -10,23 +10,32 @@ type ProductsState =
 
 export function useProducts() {
   const [state, setState] = useState<ProductsState>({ status: "loading" });
+  const [loadAttempt, setLoadAttempt] = useState(0);
 
-  const reload = useCallback(async () => {
+  const reload = useCallback(() => {
     setState({ status: "loading" });
-    try {
-      setState({ status: "success", products: await fetchProducts() });
-    } catch {
-      setState({ status: "error", message: "Le catalogue n’a pas pu être chargé." });
-    }
+    setLoadAttempt((attempt) => attempt + 1);
   }, []);
 
   useEffect(() => {
-    let active = true;
-    fetchProducts()
-      .then((products) => { if (active) setState({ status: "success", products }); })
-      .catch(() => { if (active) setState({ status: "error", message: "Le catalogue n’a pas pu être chargé." }); });
-    return () => { active = false; };
-  }, []);
+    const controller = new AbortController();
+
+    async function load() {
+      try {
+        const products = await fetchProducts();
+        if (!controller.signal.aborted) {
+          setState({ status: "success", products });
+        }
+      } catch {
+        if (!controller.signal.aborted) {
+          setState({ status: "error", message: "Le catalogue n’a pas pu être chargé." });
+        }
+      }
+    }
+
+    void load();
+    return () => controller.abort();
+  }, [loadAttempt]);
 
   return { state, reload };
 }

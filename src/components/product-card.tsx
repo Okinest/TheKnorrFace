@@ -1,19 +1,25 @@
 import { Image } from "expo-image";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import type { Product } from "@/models/product";
+import type { Product, ProductCategory } from "@/models/product";
 
 type Props = { product: Product; onAddToCart: (productId: string) => void };
 
+const CATEGORY_LABELS: Record<ProductCategory, string> = {
+  men: "HOMME",
+  women: "FEMME",
+  kids: "ENFANT",
+  accessories: "ACCESSOIRES",
+};
+
 export function ProductCard({ product, onAddToCart }: Props) {
-  const categoryLabel = product.category === "men" ? "HOMME" : product.category === "women" ? "FEMME" : product.category === "kids" ? "ENFANT" : "ACCESSOIRES";
   return (
     <View style={styles.card}>
       <View style={styles.imageWrap}>
         <Image source={{ uri: product.image }} style={styles.image} contentFit="cover" transition={180} />
       </View>
       <View style={styles.details}>
-        <Text style={styles.category}>{categoryLabel}</Text>
+        <Text style={styles.category}>{CATEGORY_LABELS[product.category]}</Text>
         <Text style={styles.name} numberOfLines={1}>{product.title}</Text>
         <View style={styles.footer}>
           <Text style={styles.price}>{product.price} €</Text>
