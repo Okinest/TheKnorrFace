@@ -6,6 +6,7 @@ export type Product = {
   price: number;
   description: string;
   category: ProductCategory;
+  brand?: string;
   image: string;
   inStock: boolean;
 }
