@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { CartBadge } from "@/components/cart-badge";
 import { ProductCard } from "@/components/product-card";
 import { ProductFilters } from "@/components/product-filters";
 import { StatusMessage } from "@/components/status-message";
-import { INITIAL_CART, type CartItem } from "@/data/cart";
+import { useCart } from "@/hooks/use-cart";
 import { useColumns } from "@/hooks/use-columns";
 import { useProductFilters } from "@/hooks/use-product-filters";
 import { useProducts } from "@/hooks/use-products";
@@ -15,17 +15,7 @@ export default function Index() {
   const { state, reload } = useProducts();
   const allProducts = state.status === "success" ? state.products : [];
   const { query, setQuery, category, setCategory, products } = useProductFilters(allProducts);
-  const [cart, setCart] = useState<CartItem[]>(INITIAL_CART);
-  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-
-  function addToCart(productId: string) {
-    setCart((current) => {
-      const existing = current.find((item) => item.productId === productId);
-      return existing
-        ? current.map((item) => item.productId === productId ? { ...item, quantity: item.quantity + 1 } : item)
-        : [...current, { productId, quantity: 1 }];
-    });
-  }
+  const { addToCart } = useCart();
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -43,9 +33,7 @@ export default function Index() {
                 <Text style={styles.brand}>THE KNORR FACE</Text>
                 <Text style={styles.tagline}>LE STYLE, SANS EFFORT.</Text>
               </View>
-              <Pressable accessibilityRole="button" style={styles.cartBadge}>
-                <Text style={styles.cartText}>PANIER  ·  {cartCount}</Text>
-              </Pressable>
+              <CartBadge />
             </View>
             <View style={styles.hero}>
               <Text style={styles.eyebrow}>COLLECTION 2026</Text>
@@ -80,8 +68,6 @@ const styles = StyleSheet.create({
   topBar: { minHeight: 68, flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderBottomWidth: 1, borderBottomColor: "#E9E6DF" },
   brand: { color: "#25231F", fontSize: 16, letterSpacing: 2, fontWeight: "800" },
   tagline: { color: "#79746B", fontSize: 8, letterSpacing: 2, marginTop: 4 },
-  cartBadge: { borderWidth: 1, borderColor: "#D8D4CC", borderRadius: 20, paddingHorizontal: 12, paddingVertical: 9 },
-  cartText: { color: "#35322C", fontSize: 10, letterSpacing: 0.8 },
   hero: { backgroundColor: "#EAE6DE", borderRadius: 18, marginTop: 20, marginBottom: 25, paddingHorizontal: 22, paddingVertical: 28 },
   eyebrow: { color: "#6B665D", fontSize: 10, letterSpacing: 2 },
   heroTitle: { color: "#25231F", fontSize: 32, lineHeight: 37, fontWeight: "700", marginTop: 12 },
