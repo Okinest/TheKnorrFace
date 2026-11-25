@@ -1,0 +1,144 @@
+{
+  "info": {
+    "name": "TheKnorrFace – DummyJSON",
+    "description": "Requêtes utilisées par src/services/products-service.ts. API publique et gratuite, sans clé : https://dummyjson.com",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [{ "key": "baseUrl", "value": "https://dummyjson.com" }],
+  "item": [
+    {
+      "name": "Catégories vêtements (utilisées par l'app)",
+      "description": "Les 7 appels faits par fetchProducts(). Les tests du dossier vérifient les champs du type ApiProduct.",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+              "const data = pm.response.json();",
+              "pm.test(\"Contient des produits\", () => pm.expect(data.products).to.be.an(\"array\").that.is.not.empty);",
+              "pm.test(\"Champs utilisés par l'app (ApiProduct)\", () => {",
+              "  data.products.forEach((p) => {",
+              "    pm.expect(p.id).to.be.a(\"number\");",
+              "    pm.expect(p.title).to.be.a(\"string\");",
+              "    pm.expect(p.description).to.be.a(\"string\");",
+              "    pm.expect(p.price).to.be.a(\"number\");",
+              "    pm.expect(p.thumbnail).to.be.a(\"string\");",
+              "    pm.expect(p.stock).to.be.a(\"number\");",
+              "    if (\"brand\" in p) pm.expect(p.brand).to.be.a(\"string\");",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "item": [
+        { "name": "mens-shirts", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/category/mens-shirts", "host": ["{{baseUrl}}"], "path": ["products", "category", "mens-shirts"] } } },
+        { "name": "mens-shoes", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/category/mens-shoes", "host": ["{{baseUrl}}"], "path": ["products", "category", "mens-shoes"] } } },
+        { "name": "tops", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/category/tops", "host": ["{{baseUrl}}"], "path": ["products", "category", "tops"] } } },
+        { "name": "womens-dresses", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/category/womens-dresses", "host": ["{{baseUrl}}"], "path": ["products", "category", "womens-dresses"] } } },
+        { "name": "womens-shoes", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/category/womens-shoes", "host": ["{{baseUrl}}"], "path": ["products", "category", "womens-shoes"] } } },
+        { "name": "womens-bags", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/category/womens-bags", "host": ["{{baseUrl}}"], "path": ["products", "category", "womens-bags"] } } },
+        { "name": "sunglasses", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/category/sunglasses", "host": ["{{baseUrl}}"], "path": ["products", "category", "sunglasses"] } } }
+      ]
+    },
+    {
+      "name": "Exploration",
+      "item": [
+        {
+          "name": "Liste des catégories",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+                  "const cats = pm.response.json();",
+                  "const used = [\"mens-shirts\", \"mens-shoes\", \"tops\", \"womens-dresses\", \"womens-shoes\", \"womens-bags\", \"sunglasses\"];",
+                  "pm.test(\"Toutes les catégories de l'app existent\", () => used.forEach((c) => pm.expect(cats).to.include(c)));"
+                ]
+              }
+            }
+          ],
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/category-list", "host": ["{{baseUrl}}"], "path": ["products", "category-list"] } }
+        },
+        {
+          "name": "Un produit (id 83)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Bon id\", () => pm.expect(pm.response.json().id).to.eql(83));"
+                ]
+              }
+            }
+          ],
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/83", "host": ["{{baseUrl}}"], "path": ["products", "83"] } }
+        }
+      ]
+    },
+    {
+      "name": "Cas d'erreur",
+      "item": [
+        {
+          "name": "Mauvaise adresse (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": ["pm.test(\"Statut 404 : response.ok est faux, le service lance une erreur\", () => pm.response.to.have.status(404));"]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "description": "Simule l'erreur demandée à l'étape 2 du TP.",
+            "url": { "raw": "{{baseUrl}}/produits", "host": ["{{baseUrl}}"], "path": ["produits"] }
+          }
+        },
+        {
+          "name": "Produit inexistant (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"Message d'erreur\", () => pm.expect(pm.response.json().message).to.be.a(\"string\"));"
+                ]
+              }
+            }
+          ],
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/products/99999", "host": ["{{baseUrl}}"], "path": ["products", "99999"] } }
+        },
+        {
+          "name": "Catégorie inexistante (200, liste vide)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Statut 200 malgré tout\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Liste vide\", () => pm.expect(pm.response.json().products).to.be.empty);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "description": "Attention : une catégorie mal écrite ne renvoie pas d'erreur, seulement une liste vide.",
+            "url": { "raw": "{{baseUrl}}/products/category/inexistant", "host": ["{{baseUrl}}"], "path": ["products", "category", "inexistant"] }
+          }
+        }
+      ]
+    }
+  ]
+}
