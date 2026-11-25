@@ -1,15 +1,18 @@
+import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text } from "react-native";
 
 import { useCart } from "@/hooks/use-cart";
 
 // Lit le panier directement depuis le Context : aucune prop nécessaire.
 export function CartBadge() {
+  const router = useRouter();
   const { count } = useCart();
 
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={`Panier, ${count} article${count > 1 ? "s" : ""}`}
+      onPress={() => router.navigate("/cart")}
       style={styles.badge}
     >
       <Text style={styles.text}>PANIER  ·  {count}</Text>

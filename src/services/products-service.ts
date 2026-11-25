@@ -1,12 +1,13 @@
 import type { Product, ProductCategory } from "@/models/product";
 
-const API_URL = "https://dummyjson.com/products/category";
+const PRODUCTS_URL = "https://dummyjson.com/products";
 
 type ApiProduct = {
   id: number;
   title: string;
   description: string;
   price: number;
+  category: string;
   thumbnail: string;
   stock: number;
   brand?: string;
@@ -38,7 +39,7 @@ function toProduct(item: ApiProduct, category: ProductCategory): Product {
 }
 
 async function fetchCategory(apiCategory: string): Promise<Product[]> {
-  const response = await fetch(`${API_URL}/${apiCategory}`);
+  const response = await fetch(`${PRODUCTS_URL}/category/${apiCategory}`);
   if (!response.ok) {
     throw new Error(`Erreur ${response.status}`);
   }
@@ -49,4 +50,17 @@ async function fetchCategory(apiCategory: string): Promise<Product[]> {
 export async function fetchProducts(): Promise<Product[]> {
   const lists = await Promise.all(Object.keys(CATEGORIES).map(fetchCategory));
   return lists.flat();
+}
+
+export async function fetchProduct(id: string): Promise<Product | undefined> {
+  const response = await fetch(`${PRODUCTS_URL}/${encodeURIComponent(id)}`);
+  // L'API répond 404 pour un identifiant inconnu : ce n'est pas une erreur
+  if (response.status === 404) return undefined;
+  if (!response.ok) {
+    throw new Error(`Erreur ${response.status}`);
+  }
+  const data: ApiProduct = await response.json();
+  // Un article hors des catégories du catalogue n'est pas vendu par la boutique
+  const category = CATEGORIES[data.category];
+  return category ? toProduct(data, category) : undefined;
 }

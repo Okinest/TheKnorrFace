@@ -9,7 +9,7 @@ export const unstable_settings = { anchor: "(tabs)" };
 export default function RootLayout() {
   return (
     <CartProvider>
-      <Stack>
+      <Stack screenOptions={{ headerTransparent: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false, title: "Catalogue" }} />
       </Stack>
     </CartProvider>

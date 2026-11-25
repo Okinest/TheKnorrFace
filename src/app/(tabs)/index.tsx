@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -11,11 +12,15 @@ import { useProductFilters } from "@/hooks/use-product-filters";
 import { useProducts } from "@/hooks/use-products";
 
 export default function Index() {
+  const router = useRouter();
   const { columns, isWide } = useColumns();
   const { state, reload } = useProducts();
   const allProducts = state.status === "success" ? state.products : [];
   const { query, setQuery, category, setCategory, products } = useProductFilters(allProducts);
   const { addToCart } = useCart();
+
+  const openProduct = (id: string) =>
+    router.push({ pathname: "/products/[id]", params: { id } });
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -47,7 +52,7 @@ export default function Index() {
             <ProductFilters query={query} onQueryChange={setQuery} category={category} onCategoryChange={setCategory} />
           </View>
         )}
-        renderItem={({ item }) => <ProductCard product={item} onAddToCart={addToCart} />}
+        renderItem={({ item }) => <ProductCard product={item} onAddToCart={addToCart} onPress={openProduct} />}
         ListEmptyComponent={
           state.status === "loading" ? (
             <StatusMessage status="loading" />  

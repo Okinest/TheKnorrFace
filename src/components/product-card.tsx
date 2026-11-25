@@ -1,20 +1,22 @@
 import { Image } from "expo-image";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-import type { Product, ProductCategory } from "@/models/product";
+import { CATEGORY_LABELS, type Product } from "@/models/product";
 
-type Props = { product: Product; onAddToCart: (productId: string) => void };
-
-const CATEGORY_LABELS: Record<ProductCategory, string> = {
-  men: "HOMME",
-  women: "FEMME",
-  kids: "ENFANT",
-  accessories: "ACCESSOIRES",
+type Props = {
+  product: Product;
+  onAddToCart: (productId: string) => void;
+  onPress?: (productId: string) => void;
 };
 
-export function ProductCard({ product, onAddToCart }: Props) {
+export function ProductCard({ product, onAddToCart, onPress }: Props) {
   return (
-    <View style={styles.card}>
+    <Pressable
+      accessibilityRole="link"
+      accessibilityLabel={`Voir ${product.title}`}
+      onPress={() => onPress?.(product.id)}
+      style={styles.card}
+    >
       <View style={styles.imageWrap}>
         <Image source={{ uri: product.image }} style={styles.image} contentFit="cover" transition={180} />
       </View>
@@ -33,7 +35,7 @@ export function ProductCard({ product, onAddToCart }: Props) {
           </Pressable>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
@@ -42,7 +44,7 @@ const styles = StyleSheet.create({
   imageWrap: { height: 220, backgroundColor: "#F0EEE9" },
   image: { width: "100%", height: "100%" },
   details: { padding: 13 },
-  category: { color: "#7D786F", fontSize: 10, letterSpacing: 1.4, marginBottom: 5 },
+  category: { color: "#7D786F", fontSize: 10, letterSpacing: 1.4, marginBottom: 5, textTransform: "uppercase" },
   name: { color: "#25231F", fontSize: 15, fontWeight: "600" },
   footer: { marginTop: 11, flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 6 },
   price: { color: "#25231F", fontSize: 14, fontWeight: "700" },

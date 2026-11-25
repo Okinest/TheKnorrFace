@@ -9,7 +9,14 @@ export type Product = {
   brand?: string;
   image: string;
   inStock: boolean;
-}
+};
+
+export const CATEGORY_LABELS: Record<ProductCategory, string> = {
+  men: "Homme",
+  women: "Femme",
+  kids: "Enfant",
+  accessories: "Accessoires",
+};
 
 export type ProductFilters = {
   query: string;
@@ -32,4 +39,19 @@ export function matchesFilters(product: Product, filters: ProductFilters): boole
     (filters.price.max === null || product.price <= filters.price.max);
   const matchesInStock = filters.inStock === null || product.inStock === filters.inStock;
   return matchesQuery && matchesCategory && matchesPrice && matchesInStock;
+}
+
+export type CategorySection<T> = { title: string; data: T[] };
+
+// Regroupe des articles par catégorie, au format attendu par SectionList
+export function groupByCategory<T extends { category: ProductCategory }>(
+  items: T[],
+): CategorySection<T>[] {
+  const categories = Object.keys(CATEGORY_LABELS) as ProductCategory[];
+  return categories
+    .map((category) => ({
+      title: CATEGORY_LABELS[category],
+      data: items.filter((item) => item.category === category),
+    }))
+    .filter((section) => section.data.length > 0);
 }

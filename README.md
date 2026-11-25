@@ -1,56 +1,56 @@
-# Welcome to your Expo app 👋
+# The Knorr Face
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Application mobile et web de boutique de vêtements, réalisée avec Expo et Expo Router (projet React Native, ESGI).
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Lancer le projet
 
 ```bash
-npm run reset-project
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
+Puis appuyer sur `w` pour le web, ou scanner le QR code avec Expo Go.
 
-### Other setup steps
+Vérifications avant de pousser :
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```bash
+npx tsc --noEmit
+npx expo lint
+```
 
-## Learn more
+## Écrans
 
-To learn more about developing your project with Expo, look at the following resources:
+| Écran | Fichier | URL web | Lien profond (mobile) |
+| --- | --- | --- | --- |
+| Catalogue (onglet) | `src/app/(tabs)/index.tsx` | `/` | `theknorrface://` |
+| Panier (onglet) | `src/app/(tabs)/cart.tsx` | `/cart` | `theknorrface://cart` |
+| Détail d'un article | `src/app/products/[id].tsx` | `/products/:id` (ex. `/products/83`) | `theknorrface://products/83` |
+| Page introuvable | `src/app/+not-found.tsx` | toute adresse inconnue | |
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- **Catalogue** : les articles de l'API, affichés en grille. On peut les filtrer par recherche texte et par catégorie, et ces deux filtres se combinent. Un appui sur une carte ouvre le détail.
+- **Panier** : une `SectionList` des articles du panier, regroupés par catégorie, avec les quantités et le total. Chaque article renvoie vers son détail.
+- **Détail** : l'écran lit l'identifiant dans l'URL et recharge l'article depuis l'API. Le nom de l'article s'affiche dans l'en-tête. Un identifiant inconnu affiche « Cet article est introuvable. ».
+- **Page introuvable** : affiche un lien de retour vers le catalogue.
 
-## Join the community
+Dans Expo Go, les liens profonds prennent la forme `exp://<IP>:8081/--/products/83`.
 
-Join our community of developers creating universal apps.
+## API utilisée
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+[DummyJSON](https://dummyjson.com/docs/products), sans clé :
+
+- `GET https://dummyjson.com/products/category/{categorie}` charge la liste du catalogue. Les catégories utilisées sont `mens-shirts`, `mens-shoes`, `tops`, `womens-dresses`, `womens-shoes`, `womens-bags` et `sunglasses`.
+- `GET https://dummyjson.com/products/{id}` charge un article. Un article hors de ces catégories, ou un identifiant inconnu (404), est considéré comme introuvable.
+
+Une collection Postman est disponible dans `postman/`.
+
+## Organisation du code
+
+```
+src/
+├── app/          routes Expo Router (pile racine, onglets, détail, +not-found)
+├── components/   composants d'affichage (carte article, filtres, messages d'état…)
+├── context/      CartProvider (état du panier partagé)
+├── hooks/        useProducts, useProduct, useProductFilters, useCart, useColumns
+├── models/       types et règles métier (filtres, regroupement par catégorie, panier)
+└── services/     appels à l'API (fetchProducts, fetchProduct)
+```
