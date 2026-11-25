@@ -10,12 +10,14 @@ import { groupByCategory } from "@/models/product";
 
 export default function CartScreen() {
   const { state, reload } = useProducts();
-  const { items, addToCart, removeFromCart } = useCart();
+  const { status: cartStatus, items, addToCart, removeFromCart } = useCart();
 
-  if (state.status === "loading")
+  if (state.status === "loading" || cartStatus === "loading")
     return <StatusMessage status="loading" message="Chargement du panier…" />;
   if (state.status === "error")
     return <StatusMessage status="error" message={state.message} onRetry={reload} />;
+  if (cartStatus === "error")
+    return <StatusMessage status="error" message="Panier indisponible." />;
 
   const lines = toCartLines(state.products, items);
   const sections = groupByCategory(lines);

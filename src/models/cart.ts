@@ -1,8 +1,13 @@
-import type { CartItem } from "@/data/cart";
 import type { Product } from "@/models/product";
 
 // Une ligne du panier : l'article et sa quantité
 export type CartLine = Product & { quantity: number };
+
+export type CartItem = {
+  productId: string;
+  quantity: number;
+  addedAt: number; // pour afficher les ajouts les plus récents en premier
+};
 
 // Associe chaque élément du panier à son article. Un article inconnu est ignoré
 export function toCartLines(products: Product[], items: CartItem[]): CartLine[] {

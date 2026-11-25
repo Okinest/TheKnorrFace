@@ -40,6 +40,15 @@ export default function TabsLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="account"
+        options={{
+          title: "Compte",
+          tabBarIcon: ({ focused, size }) => (
+            <SymbolView name="person" tintColor={focused ? ACTIVE : INACTIVE} size={size} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
