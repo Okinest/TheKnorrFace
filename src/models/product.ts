@@ -8,6 +8,7 @@ export type Product = {
   category: ProductCategory;
   image: string;
   inStock: boolean;
+  brand?: string;
 }
 
 export type ProductFilters = {
