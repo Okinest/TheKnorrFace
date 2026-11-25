@@ -6,9 +6,9 @@ export type Product = {
   price: number;
   description: string;
   category: ProductCategory;
+  brand?: string;
   image: string;
   inStock: boolean;
-  brand?: string;
 }
 
 export type ProductFilters = {

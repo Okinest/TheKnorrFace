@@ -2,7 +2,6 @@ import type { Product, ProductCategory } from "@/models/product";
 
 const API_URL = "https://dummyjson.com/products/category";
 
-// Type de la réponse de l'API, limité aux champs utilisés.
 type ApiProduct = {
   id: number;
   title: string;
@@ -15,7 +14,6 @@ type ApiProduct = {
 
 type ApiResponse = { products: ApiProduct[] };
 
-// Catégories DummyJSON -> catégories de l'app.
 const CATEGORIES: Record<string, ProductCategory> = {
   "mens-shirts": "men",
   "mens-shoes": "men",
@@ -26,7 +24,6 @@ const CATEGORIES: Record<string, ProductCategory> = {
   "sunglasses": "accessories",
 };
 
-// Convertit un produit de l'API en Product.
 function toProduct(item: ApiProduct, category: ProductCategory): Product {
   return {
     id: String(item.id),

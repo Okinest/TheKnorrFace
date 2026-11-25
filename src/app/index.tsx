@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ProductCard } from "@/components/product-card";
 import { ProductFilters } from "@/components/product-filters";
+import { StatusMessage } from "@/components/status-message";
 import { INITIAL_CART, type CartItem } from "@/data/cart";
 import { useColumns } from "@/hooks/use-columns";
 import { useProductFilters } from "@/hooks/use-product-filters";
@@ -47,7 +48,7 @@ export default function Index() {
               </Pressable>
             </View>
             <View style={styles.hero}>
-              <Text style={styles.eyebrow}>COLLECTION  —  2026</Text>
+              <Text style={styles.eyebrow}>COLLECTION 2026</Text>
               <Text style={styles.heroTitle}>Les essentiels{ "\n" }du quotidien.</Text>
               <Text style={styles.heroSubtitle}>Des pièces choisies pour durer, pensées pour vous.</Text>
             </View>
@@ -61,9 +62,9 @@ export default function Index() {
         renderItem={({ item }) => <ProductCard product={item} onAddToCart={addToCart} />}
         ListEmptyComponent={
           state.status === "loading" ? (
-            <View style={styles.stateBox}><ActivityIndicator color="#292720" /><Text style={styles.stateText}>Chargement du catalogue…</Text></View>
+            <StatusMessage status="loading" />  
           ) : state.status === "error" ? (
-            <View style={styles.stateBox}><Text style={styles.stateText}>{state.message}</Text><Pressable onPress={reload} style={styles.retryButton}><Text style={styles.retryText}>Réessayer</Text></Pressable></View>
+            <StatusMessage status="error" message={state.message} onRetry={reload} />
           ) : <Text style={styles.empty}>Aucun article ne correspond à votre recherche.</Text>
         }
         showsVerticalScrollIndicator={false}
