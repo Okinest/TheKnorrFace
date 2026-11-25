@@ -1,6 +1,8 @@
 import { Link, Stack } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 
+import { colors } from "@/constants/theme";
+
 export default function NotFoundScreen() {
   return (
     <View style={styles.box}>
@@ -14,7 +16,7 @@ export default function NotFoundScreen() {
 }
 
 const styles = StyleSheet.create({
-  box: { flex: 1, alignItems: "center", justifyContent: "center", gap: 12, backgroundColor: "#F8F7F4" },
-  text: { color: "#25231F", fontSize: 18 },
-  link: { color: "#25231F", fontSize: 16, fontWeight: "600" },
+  box: { flex: 1, alignItems: "center", justifyContent: "center", gap: 12, backgroundColor: colors.background },
+  text: { color: colors.text, fontSize: 18 },
+  link: { color: colors.text, fontSize: 16, fontWeight: "600" },
 });

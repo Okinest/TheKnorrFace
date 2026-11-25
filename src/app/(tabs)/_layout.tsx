@@ -1,8 +1,10 @@
 import { Tabs } from "expo-router/js-tabs";
 import { SymbolView } from "expo-symbols";
 
-const ACTIVE = "#25231F";
-const INACTIVE = "#79746B";
+import { colors } from "@/constants/theme";
+
+const ACTIVE = colors.text;
+const INACTIVE = colors.textMuted;
 
 export default function TabsLayout() {
   return (
@@ -11,7 +13,7 @@ export default function TabsLayout() {
         headerShown: false,
         tabBarActiveTintColor: ACTIVE,
         tabBarInactiveTintColor: INACTIVE,
-        tabBarStyle: { backgroundColor: "#F8F7F4", borderTopColor: "#E9E6DF" },
+        tabBarStyle: { backgroundColor: colors.background, borderTopColor: colors.border },
       }}
     >
       <Tabs.Screen

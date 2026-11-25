@@ -1,4 +1,7 @@
 import { Stack } from "expo-router";
+import { View } from "react-native";
+
+import { colors } from "@/constants/theme";
 
 import { AuthProvider } from "@/context/auth-context"
 import { CartProvider } from "@/context/cart-context";
@@ -22,10 +25,23 @@ export default function RootLayout() {
 function RootStack() { 
   const { user, initializing } = useAuth()
 
-  if (initializing) return <StatusMessage status="loading" message="Chargement…" />
+  if (initializing)
+    return (
+      <View style={{ flex: 1, justifyContent: "center", backgroundColor: colors.background }}>
+        <StatusMessage status="loading" message="Chargement…" />
+      </View>
+    )
 
   return (
-    <Stack screenOptions={{ headerTransparent: false }}>
+    <Stack
+      screenOptions={{
+        headerTransparent: false,
+        headerStyle: { backgroundColor: colors.background },
+        headerTintColor: colors.text,
+        headerShadowVisible: false,
+        contentStyle: { backgroundColor: colors.background },
+      }}
+    >
       <Stack.Protected guard={user !== null}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false, title: "Catalogue" }} />
         <Stack.Screen name="products/[id]" />

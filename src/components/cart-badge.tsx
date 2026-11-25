@@ -1,6 +1,7 @@
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text } from "react-native";
 
+import { colors } from "@/constants/theme";
 import { useCart } from "@/hooks/use-cart";
 
 // Lit le panier directement depuis le Context : aucune prop nécessaire.
@@ -21,6 +22,6 @@ export function CartBadge() {
 }
 
 const styles = StyleSheet.create({
-  badge: { borderWidth: 1, borderColor: "#D8D4CC", borderRadius: 20, paddingHorizontal: 12, paddingVertical: 9 },
-  text: { color: "#35322C", fontSize: 10, letterSpacing: 0.8 },
+  badge: { borderWidth: 1, borderColor: colors.borderStrong, borderRadius: 20, paddingHorizontal: 12, paddingVertical: 9 },
+  text: { color: colors.text, fontSize: 10, letterSpacing: 0.8 },
 });

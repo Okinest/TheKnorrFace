@@ -2,6 +2,7 @@ import { Link } from "expo-router";
 import { Pressable, SectionList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { colors } from "@/constants/theme";
 import { StatusMessage } from "@/components/status-message";
 import { useCart } from "@/hooks/use-cart";
 import { useProducts } from "@/hooks/use-products";
@@ -82,11 +83,11 @@ export default function CartScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: "#F8F7F4" },
+  safeArea: { flex: 1, backgroundColor: colors.background },
   list: { width: "100%", maxWidth: 800, alignSelf: "center", paddingHorizontal: 18, paddingBottom: 28 },
-  heading: { color: "#25231F", fontSize: 24, fontWeight: "700", marginTop: 20 },
+  heading: { color: colors.text, fontSize: 24, fontWeight: "700", marginTop: 20 },
   category: {
-    color: "#7D786F",
+    color: colors.textMuted,
     fontSize: 12,
     fontWeight: "700",
     letterSpacing: 1.4,
@@ -100,25 +101,25 @@ const styles = StyleSheet.create({
     gap: 10,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#E9E6DF",
+    borderBottomColor: colors.border,
   },
-  title: { flex: 1, color: "#25231F", fontSize: 15, fontWeight: "600" },
-  price: { color: "#25231F", fontSize: 14 },
+  title: { flex: 1, color: colors.text, fontSize: 15, fontWeight: "600" },
+  price: { color: colors.text, fontSize: 14 },
   quantity: { flexDirection: "row", alignItems: "center", gap: 8 },
   qtyButton: {
     width: 30,
     height: 30,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: "#D8D4CC",
+    borderColor: colors.borderStrong,
     alignItems: "center",
     justifyContent: "center",
   },
   pressed: { opacity: 0.6 },
-  qtyText: { color: "#25231F", fontSize: 16, fontWeight: "600" },
-  qtyValue: { minWidth: 18, textAlign: "center", color: "#25231F", fontSize: 14 },
-  empty: { color: "#6B665D", textAlign: "center", paddingVertical: 36, fontSize: 14 },
+  qtyText: { color: colors.text, fontSize: 16, fontWeight: "600" },
+  qtyValue: { minWidth: 18, textAlign: "center", color: colors.text, fontSize: 14 },
+  empty: { color: colors.textSecondary, textAlign: "center", paddingVertical: 36, fontSize: 14 },
   footer: { flexDirection: "row", justifyContent: "space-between", marginTop: 22 },
-  totalLabel: { color: "#25231F", fontSize: 17, fontWeight: "700" },
-  totalValue: { color: "#25231F", fontSize: 17, fontWeight: "700" },
+  totalLabel: { color: colors.text, fontSize: 17, fontWeight: "700" },
+  totalValue: { color: colors.text, fontSize: 17, fontWeight: "700" },
 });

@@ -2,6 +2,7 @@ import { Image } from "expo-image";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
+import { colors } from "@/constants/theme";
 import { StatusMessage } from "@/components/status-message";
 import { useCart } from "@/hooks/use-cart";
 import { useProduct } from "@/hooks/use-product";
@@ -54,18 +55,18 @@ function ProductDetails({ product }: { product: Product }) {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: "#F8F7F4" },
+  screen: { flex: 1, backgroundColor: colors.background },
   content: { width: "100%", maxWidth: 800, alignSelf: "center" },
-  image: { width: "100%", aspectRatio: 1, backgroundColor: "#F0EEE9" },
+  image: { width: "100%", aspectRatio: 1, backgroundColor: colors.surfaceMuted },
   body: { padding: 18, gap: 8 },
-  category: { color: "#7D786F", fontSize: 11, letterSpacing: 1.4, textTransform: "uppercase" },
-  title: { color: "#25231F", fontSize: 26, fontWeight: "800" },
-  brand: { color: "#6B665D", fontSize: 15 },
-  price: { color: "#25231F", fontSize: 20, fontWeight: "700" },
-  unavailable: { color: "#B42318", fontSize: 14 },
-  description: { color: "#514D45", fontSize: 15, lineHeight: 22, marginTop: 6 },
-  button: { marginTop: 14, backgroundColor: "#27251F", borderRadius: 24, paddingVertical: 14, alignItems: "center" },
+  category: { color: colors.textMuted, fontSize: 11, letterSpacing: 1.4, textTransform: "uppercase" },
+  title: { color: colors.text, fontSize: 26, fontWeight: "800" },
+  brand: { color: colors.textSecondary, fontSize: 15 },
+  price: { color: colors.text, fontSize: 20, fontWeight: "700" },
+  unavailable: { color: colors.danger, fontSize: 14 },
+  description: { color: colors.textBody, fontSize: 15, lineHeight: 22, marginTop: 6 },
+  button: { marginTop: 14, backgroundColor: colors.primary, borderRadius: 24, paddingVertical: 14, alignItems: "center" },
   pressed: { opacity: 0.7 },
   disabled: { opacity: 0.4 },
-  buttonText: { color: "#FFFFFF", fontSize: 14, fontWeight: "600" },
+  buttonText: { color: colors.onPrimary, fontSize: 14, fontWeight: "600" },
 });

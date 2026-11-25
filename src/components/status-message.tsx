@@ -1,5 +1,7 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 
+import { colors } from "@/constants/theme";
+
 type Props =
   | { status: "loading"; message?: string }
   | { status: "error"; message: string; onRetry?: () => void };
@@ -8,7 +10,7 @@ export function StatusMessage(props: Props) {
   if (props.status === "loading") {
     return (
       <View style={styles.box}>
-        <ActivityIndicator color="#292720" />
+        <ActivityIndicator color={colors.primary} />
         <Text style={styles.text}>{props.message ?? "Chargement du catalogue…"}</Text>
       </View>
     );
@@ -32,8 +34,8 @@ export function StatusMessage(props: Props) {
 
 const styles = StyleSheet.create({
   box: { alignItems: "center", gap: 12, paddingVertical: 36 },
-  text: { color: "#6B665D", fontSize: 14, textAlign: "center" },
-  retryButton: { backgroundColor: "#292720", borderRadius: 20, paddingHorizontal: 18, paddingVertical: 10 },
+  text: { color: colors.textSecondary, fontSize: 14, textAlign: "center" },
+  retryButton: { backgroundColor: colors.primary, borderRadius: 20, paddingHorizontal: 18, paddingVertical: 10 },
   pressed: { opacity: 0.7 },
-  retryText: { color: "#FFFFFF", fontSize: 12, fontWeight: "600" },
+  retryText: { color: colors.onPrimary, fontSize: 12, fontWeight: "600" },
 });

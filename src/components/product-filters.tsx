@@ -1,5 +1,6 @@
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
+import { colors } from "@/constants/theme";
 import type { ProductCategory } from "@/models/product";
 
 const CATEGORIES: { label: string; value: ProductCategory | null }[] = [
@@ -23,7 +24,7 @@ export function ProductFilters({ query, onQueryChange, category, onCategoryChang
       <TextInput
         accessibilityLabel="Rechercher un vêtement"
         placeholder="Rechercher un vêtement…"
-        placeholderTextColor="#89847B"
+        placeholderTextColor={colors.placeholder}
         value={query}
         onChangeText={onQueryChange}
         returnKeyType="search"
@@ -44,10 +45,10 @@ export function ProductFilters({ query, onQueryChange, category, onCategoryChang
 }
 
 const styles = StyleSheet.create({
-  search: { height: 48, backgroundColor: "#FFFFFF", borderRadius: 12, borderWidth: 1, borderColor: "#E7E3DC", paddingHorizontal: 15, fontSize: 14, color: "#25231F" },
+  search: { height: 48, backgroundColor: colors.surface, borderRadius: 12, borderWidth: 1, borderColor: colors.border, paddingHorizontal: 15, fontSize: 14, color: colors.text },
   categories: { gap: 9, paddingVertical: 14 },
-  chip: { borderWidth: 1, borderColor: "#DEDAD2", borderRadius: 24, paddingHorizontal: 15, paddingVertical: 9 },
-  chipSelected: { backgroundColor: "#292720", borderColor: "#292720" },
-  chipText: { color: "#514D45", fontSize: 12 },
-  chipTextSelected: { color: "#FFFFFF", fontWeight: "600" },
+  chip: { borderWidth: 1, borderColor: colors.borderStrong, borderRadius: 24, paddingHorizontal: 15, paddingVertical: 9 },
+  chipSelected: { backgroundColor: colors.primary, borderColor: colors.primary },
+  chipText: { color: colors.textBody, fontSize: 12 },
+  chipTextSelected: { color: colors.onPrimary, fontWeight: "600" },
 });
