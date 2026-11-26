@@ -9,12 +9,12 @@ export default function SignInScreen() {
   return (
     <View style={styles.background}>
       <View style={styles.screen}>
-        <Text style={styles.brand}>THE KNORR FACE</Text>
-        <Text style={styles.title}>Connexion</Text>
+        <Text style={styles.brand}>The Knorr Face</Text>
         <AuthForm submitLabel="Se connecter" onSubmit={signIn} />
-        <Link href="/sign-up" style={styles.link}>
-          Pas encore de compte ? Créer un compte
-        </Link>
+        <Text style={styles.switch}>
+          Pas encore de compte ?{" "}
+          <Link href="/sign-up" style={styles.link}>Créer un compte</Link>
+        </Text>
       </View>
     </View>
   );
@@ -22,14 +22,8 @@ export default function SignInScreen() {
 
 const styles = StyleSheet.create({
   background: { flex: 1, backgroundColor: colors.background },
-  screen: {
-    width: "100%",
-    maxWidth: 420,
-    alignSelf: "center",
-    padding: 24,
-    gap: 16,
-  },
-  brand: { color: colors.text, fontSize: 14, letterSpacing: 2, fontWeight: "800" },
-  title: { color: colors.text, fontSize: 26, fontWeight: "700" },
-  link: { color: colors.text, fontSize: 14, fontWeight: "600", textAlign: "center", marginTop: 4 },
+  screen: { width: "100%", maxWidth: 420, alignSelf: "center", padding: 24, gap: 24 },
+  brand: { color: colors.text, fontSize: 28, fontWeight: "800" },
+  switch: { color: colors.textSecondary, fontSize: 15, textAlign: "center" },
+  link: { color: colors.text, fontWeight: "600", textDecorationLine: "underline" },
 });

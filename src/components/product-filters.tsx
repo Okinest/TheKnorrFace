@@ -1,14 +1,12 @@
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { ScrollView, StyleSheet, TextInput, View } from "react-native";
 
-import { colors } from "@/constants/theme";
-import type { ProductCategory } from "@/models/product";
+import { Chip } from "@/components/chip";
+import { colors, radius } from "@/constants/theme";
+import { CATEGORY_LABELS, type ProductCategory } from "@/models/product";
 
 const CATEGORIES: { label: string; value: ProductCategory | null }[] = [
   { label: "Tout", value: null },
-  { label: "Homme", value: "men" },
-  { label: "Femme", value: "women" },
-  { label: "Enfant", value: "kids" },
-  { label: "Accessoires", value: "accessories" },
+  ...(Object.keys(CATEGORY_LABELS) as ProductCategory[]).map((value) => ({ label: CATEGORY_LABELS[value], value })),
 ];
 
 type Props = {
@@ -22,33 +20,39 @@ export function ProductFilters({ query, onQueryChange, category, onCategoryChang
   return (
     <View>
       <TextInput
-        accessibilityLabel="Rechercher un vêtement"
-        placeholder="Rechercher un vêtement…"
+        accessibilityLabel="Rechercher un article"
+        placeholder="Rechercher un article"
         placeholderTextColor={colors.placeholder}
         value={query}
         onChangeText={onQueryChange}
         returnKeyType="search"
+        clearButtonMode="while-editing"
         style={styles.search}
       />
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.categories}>
-        {CATEGORIES.map((item) => {
-          const selected = item.value === category;
-          return (
-            <Pressable key={item.label} accessibilityRole="button" accessibilityState={{ selected }} onPress={() => onCategoryChange(item.value)} style={[styles.chip, selected && styles.chipSelected]}>
-              <Text style={[styles.chipText, selected && styles.chipTextSelected]}>{item.label}</Text>
-            </Pressable>
-          );
-        })}
+        {CATEGORIES.map((item) => (
+          <Chip
+            key={item.label}
+            label={item.label}
+            selected={item.value === category}
+            onPress={() => onCategoryChange(item.value)}
+          />
+        ))}
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  search: { height: 48, backgroundColor: colors.surface, borderRadius: 12, borderWidth: 1, borderColor: colors.border, paddingHorizontal: 15, fontSize: 14, color: colors.text },
-  categories: { gap: 9, paddingVertical: 14 },
-  chip: { borderWidth: 1, borderColor: colors.borderStrong, borderRadius: 24, paddingHorizontal: 15, paddingVertical: 9 },
-  chipSelected: { backgroundColor: colors.primary, borderColor: colors.primary },
-  chipText: { color: colors.textBody, fontSize: 12 },
-  chipTextSelected: { color: colors.onPrimary, fontWeight: "600" },
+  search: {
+    height: 48,
+    backgroundColor: colors.surface,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    color: colors.text,
+  },
+  categories: { gap: 8, paddingVertical: 16 },
 });

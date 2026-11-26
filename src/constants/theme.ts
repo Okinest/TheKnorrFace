@@ -14,3 +14,7 @@ export const colors = {
   onPrimary: "#FFFFFF",
   danger: "#B42318",
 } as const;
+
+export const radius = { sm: 10, md: 12, card: 14, pill: 999 } as const;
+
+export const pressedOpacity = 0.7;

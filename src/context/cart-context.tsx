@@ -1,4 +1,4 @@
-import { createContext, useCallback, useMemo, type ReactNode } from "react";
+import { createContext, useCallback, useMemo, useState, type ReactNode } from "react";
 
 import { useAuth } from "@/hooks/use-auth";
 import { useRealtimeCart, type CartState } from "@/hooks/use-realtime-cart";
@@ -12,6 +12,9 @@ export type CartContextValue = {
   addToCart: (productId: string) => void;
   removeFromCart: (productId: string) => void;
   clearCart: () => void;
+  // Message affiché quand une écriture dans Firestore échoue
+  writeError: string | null;
+  dismissWriteError: () => void;
 };
 
 // `null` par défaut : permet au hook useCart de détecter un usage hors du Provider.
@@ -26,18 +29,28 @@ export function CartProvider({ children }: Props) {
   const uid = user ? user.uid : null;
   const state = useRealtimeCart(uid);
   const items = useMemo(() => (state.status === "success" ? state.items : []), [state]);
+  const [writeError, setWriteError] = useState<string | null>(null);
+  const dismissWriteError = useCallback(() => setWriteError(null), []);
+
+  // Toute écriture passe par ici : un échec affiche un message au lieu d'être ignoré.
+  const write = useCallback((operation: Promise<void>) => {
+    setWriteError(null);
+    operation.catch(() => setWriteError("Le panier n’a pas pu être mis à jour. Réessayez."));
+  }, []);
 
   const addToCart = useCallback(
     (productId: string) => {
       if (uid === null) return;
       const existing = items.find((item) => item.productId === productId);
-      void saveCartItem(uid, {
-        productId,
-        quantity: (existing?.quantity ?? 0) + 1,
-        addedAt: existing?.addedAt ?? Date.now(),
-      });
+      write(
+        saveCartItem(uid, {
+          productId,
+          quantity: (existing?.quantity ?? 0) + 1,
+          addedAt: existing?.addedAt ?? Date.now(),
+        }),
+      );
     },
-    [uid, items],
+    [uid, items, write],
   );
 
   const removeFromCart = useCallback(
@@ -46,24 +59,26 @@ export function CartProvider({ children }: Props) {
       const existing = items.find((item) => item.productId === productId);
       if (!existing) return;
       // Les règles refusent une quantité à 0 : on supprime le document.
-      void (existing.quantity <= 1
-        ? deleteCartItem(uid, productId)
-        : saveCartItem(uid, { ...existing, quantity: existing.quantity - 1 }));
+      write(
+        existing.quantity <= 1
+          ? deleteCartItem(uid, productId)
+          : saveCartItem(uid, { ...existing, quantity: existing.quantity - 1 }),
+      );
     },
-    [uid, items],
+    [uid, items, write],
   );
 
   const clearCart = useCallback(() => {
     if (uid === null) return;
-    items.forEach((item) => void deleteCartItem(uid, item.productId));
-  }, [uid, items]);
+    write(Promise.all(items.map((item) => deleteCartItem(uid, item.productId))).then(() => undefined));
+  }, [uid, items, write]);
 
   // Le total est dérivé des items : pas de useState séparé.
   const count = items.reduce((total, item) => total + item.quantity, 0);
 
   const value = useMemo(
-    () => ({ status: state.status, items, count, addToCart, removeFromCart, clearCart }),
-    [state.status, items, count, addToCart, removeFromCart, clearCart],
+    () => ({ status: state.status, items, count, addToCart, removeFromCart, clearCart, writeError, dismissWriteError }),
+    [state.status, items, count, addToCart, removeFromCart, clearCart, writeError, dismissWriteError],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

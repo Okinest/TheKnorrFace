@@ -1,5 +1,6 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
+import { Button } from "@/components/button";
 import { colors } from "@/constants/theme";
 
 type Props =
@@ -11,31 +12,20 @@ export function StatusMessage(props: Props) {
     return (
       <View style={styles.box}>
         <ActivityIndicator color={colors.primary} />
-        <Text style={styles.text}>{props.message ?? "Chargement du catalogue…"}</Text>
+        <Text style={styles.text}>{props.message ?? "Chargement…"}</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.box}>
+    <View style={styles.box} accessibilityRole="alert">
       <Text style={styles.text}>{props.message}</Text>
-      {props.onRetry && (
-        <Pressable
-          accessibilityRole="button"
-          onPress={props.onRetry}
-          style={({ pressed }) => [styles.retryButton, pressed && styles.pressed]}
-        >
-          <Text style={styles.retryText}>Réessayer</Text>
-        </Pressable>
-      )}
+      {props.onRetry && <Button size="sm" variant="secondary" label="Réessayer" onPress={props.onRetry} />}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  box: { alignItems: "center", gap: 12, paddingVertical: 36 },
-  text: { color: colors.textSecondary, fontSize: 14, textAlign: "center" },
-  retryButton: { backgroundColor: colors.primary, borderRadius: 20, paddingHorizontal: 18, paddingVertical: 10 },
-  pressed: { opacity: 0.7 },
-  retryText: { color: colors.onPrimary, fontSize: 12, fontWeight: "600" },
+  box: { alignItems: "center", gap: 16, paddingVertical: 40, paddingHorizontal: 16 },
+  text: { color: colors.textSecondary, fontSize: 15, textAlign: "center" },
 });

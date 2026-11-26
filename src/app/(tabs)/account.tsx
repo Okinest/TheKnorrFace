@@ -1,6 +1,7 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { Button } from "@/components/button";
 import { colors } from "@/constants/theme";
 import { useAuth } from "@/hooks/use-auth";
 import { signOut } from "@/services/auth-service";
@@ -11,16 +12,14 @@ export default function AccountScreen() {
   return (
     <SafeAreaView style={styles.safeArea} edges={["top"]}>
       <View style={styles.screen}>
-        <Text style={styles.heading}>Mon compte</Text>
-        <Text style={styles.label}>Connecté en tant que</Text>
-        <Text style={styles.email}>{user?.email}</Text>
-        <Pressable
-          accessibilityRole="button"
-          onPress={signOut}
-          style={({ pressed }) => [styles.button, pressed && styles.pressed]}
-        >
-          <Text style={styles.buttonLabel}>Se déconnecter</Text>
-        </Pressable>
+        <Text style={styles.heading}>Compte</Text>
+        <View style={styles.identity}>
+          <Text style={styles.label}>Connecté en tant que</Text>
+          <Text style={styles.email}>{user?.email}</Text>
+        </View>
+        <View style={styles.actions}>
+          <Button variant="danger" label="Se déconnecter" onPress={signOut} />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -28,19 +27,10 @@ export default function AccountScreen() {
 
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: colors.background },
-  screen: { width: "100%", maxWidth: 800, alignSelf: "center", paddingHorizontal: 18, gap: 8 },
-  heading: { color: colors.text, fontSize: 24, fontWeight: "700", marginTop: 20, marginBottom: 12 },
-  label: { color: colors.textMuted, fontSize: 14 },
-  email: { color: colors.text, fontSize: 18, fontWeight: "700" },
-  button: {
-    marginTop: 16,
-    alignSelf: "flex-start",
-    borderWidth: 1,
-    borderColor: colors.borderStrong,
-    borderRadius: 24,
-    paddingVertical: 10,
-    paddingHorizontal: 18,
-  },
-  pressed: { opacity: 0.6 },
-  buttonLabel: { color: colors.danger, fontSize: 14, fontWeight: "600" },
+  screen: { width: "100%", maxWidth: 800, alignSelf: "center", paddingHorizontal: 16 },
+  heading: { color: colors.text, fontSize: 28, fontWeight: "700", marginTop: 16, marginBottom: 24 },
+  identity: { gap: 4 },
+  label: { color: colors.textSecondary, fontSize: 14 },
+  email: { color: colors.text, fontSize: 17, fontWeight: "600" },
+  actions: { marginTop: 32, alignItems: "flex-start" },
 });

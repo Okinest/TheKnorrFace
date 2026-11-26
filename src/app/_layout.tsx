@@ -3,13 +3,11 @@ import { View } from "react-native";
 
 import { colors } from "@/constants/theme";
 
-import { AuthProvider } from "@/context/auth-context"
+import { AuthProvider } from "@/context/auth-context";
 import { CartProvider } from "@/context/cart-context";
 import { useAuth } from "@/hooks/use-auth";
 import { StatusMessage } from "@/components/status-message";
 
-// Un article ouvert directement par son URL est posé sur les onglets :
-// sa flèche de retour y mène.
 export const unstable_settings = { anchor: "(tabs)" };
 
 export default function RootLayout() {
@@ -45,6 +43,8 @@ function RootStack() {
       <Stack.Protected guard={user !== null}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false, title: "Catalogue" }} />
         <Stack.Screen name="products/[id]" />
+        <Stack.Screen name="products/new" options={{ title: "Nouvel article" }} />
+        <Stack.Screen name="products/edit/[id]" options={{ title: "Modifier l’article" }} />
       </Stack.Protected>
       <Stack.Protected guard={user === null}>
         <Stack.Screen name="(auth)/sign-in" options={{ title: "Connexion" }} />
